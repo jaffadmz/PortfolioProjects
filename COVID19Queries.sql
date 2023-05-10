@@ -147,7 +147,7 @@ SELECT *
 FROM DeathsPerCountry
 
 
---Queries used for Tableau Public 
+--Tableau Public cannot connect to SQL, so these queries will be used to create Excel tables for import
 
 SELECT SUM(new_cases) as total_cases, SUM(cast(new_deaths as int)) as total_deaths, SUM(cast(new_deaths as int))/SUM(New_Cases)*100 as DeathPercentage
 From PortfolioProject..CovidDeathsNew
@@ -158,7 +158,7 @@ order by 1,2
 SELECT location, SUM(cast(new_deaths as int)) as TotalDeathCount
 From PortfolioProject..CovidDeathsNew
 Where continent is null 
-and location not in ('World', 'European Union', 'International')
+and location not in ('World', 'European Union', 'International', 'High income', 'Low income', 'Upper middle income','Lower middle income')
 Group by location
 order by TotalDeathCount desc
 
@@ -174,7 +174,8 @@ From PortfolioProject..CovidDeathsNew
 Group by Location, Population, date
 order by PercentPopulationInfected desc
 
---This query examines Percent of Population Vaccinated. Each booster was counted as a seperate vaccine, so the data is skewed and shows an impossibly inflated Percent of Population Vaccinated. Thus, this query was not used for a visualization.
+--This query examines Percent of Population Vaccinated. Each booster was counted as a seperate vaccination, so the data is skewed and shows an impossibly inflated Percent of Population Vaccinated. Thus, this query was not used for a visualization.
+
 With PopvsVac (Continent, Location, Date, Population, New_Vaccinations, RollingPeopleVaccinated)
 as
 (
