@@ -147,7 +147,7 @@ SELECT *
 FROM DeathsPerCountry
 
 
---QUERIES USED IN TABLEAU VIZ
+--Queries used for Tableau Public 
 
 SELECT SUM(new_cases) as total_cases, SUM(cast(new_deaths as int)) as total_deaths, SUM(cast(new_deaths as int))/SUM(New_Cases)*100 as DeathPercentage
 From PortfolioProject..CovidDeathsNew
@@ -173,3 +173,18 @@ SELECT Location, Population,date, MAX(total_cases) as HighestInfectionCount,  Ma
 From PortfolioProject..CovidDeathsNew
 Group by Location, Population, date
 order by PercentPopulationInfected desc
+
+--This query examines Percent of Population Vaccinated. Each booster was counted as a seperate vaccine, so the data is skewed and shows an impossibly inflated Percent of Population Vaccinated. Thus, this query was not used for a visualization.
+With PopvsVac (Continent, Location, Date, Population, New_Vaccinations, RollingPeopleVaccinated)
+as
+(
+Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
+, SUM(CONVERT(bigint,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
+From PortfolioProject..CovidDeathsNew dea
+Join PortfolioProject..CovidVaccinationsNew vac
+	On dea.location = vac.location
+	and dea.date = vac.date
+where dea.continent is not null 
+)
+Select *, (RollingPeopleVaccinated/Population)*100 as PercentPeopleVaccinated
+From PopvsVac
