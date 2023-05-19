@@ -1,7 +1,8 @@
 SELECT *
 FROM PortfolioProject.dbo.NashvilleHousing
 
---Standardize Date Format
+--Standardizing Date Format
+
 SELECT SaleDateConverted, CONVERT(Date,SaleDate)
 FROM PortfolioProject.dbo.NashvilleHousing
 
@@ -18,11 +19,11 @@ UPDATE NashvilleHousing
 SET SaleDateConverted = CONVERT(Date,SaleDate)
 
 
---Populate Property Address Data
+
+--Populating Property Address Data
 
 SELECT *
 FROM PortfolioProject.dbo.NashvilleHousing
---WHERE PropertyAddress is null 
 ORDER BY ParcelID
 
 
@@ -43,8 +44,8 @@ JOIN PortfolioProject.dbo.NashvilleHousing b
 WHERE a.PropertyAddress is null
 
 
---Breaking out Address Into Individual Columns (Address, City, State)
 
+--Converting Address Into Individual Columns (Address, City, State)
 
 SELECT PropertyAddress
 FROM PortfolioProject.dbo.NashvilleHousing
@@ -75,7 +76,6 @@ SET PropertySplitCity = SUBSTRING(PropertyAddress, CHARINDEX(',',PropertyAddress
 
 SELECT *
 FROM PortfolioProject.dbo.NashvilleHousing
-
 
 
 
@@ -117,7 +117,8 @@ SELECT *
 FROM PortfolioProject.dbo.NashvilleHousing
 
 
--- Change Y and N to Yes and No in "Sold as Vacant" Field
+
+-- Changing Y and N to Yes and No in "Sold as Vacant" Field
 
 SELECT Distinct(SoldAsVacant), COUNT(SoldAsVacant)
 FROM PortfolioProject.dbo.NashvilleHousing
@@ -140,7 +141,7 @@ SET SoldasVacant = CASE WHEN SoldAsVacant = 'Y' THEN 'Yes'
 
 
 
--- Remve Duplicates
+-- Removing Duplicates
 
 WITH RowNuMCTE AS(
 SELECT *,
@@ -154,7 +155,6 @@ SELECT *,
 					UniqueID
 					) row_num
 FROM PortfolioProject.dbo.NashvilleHousing
---ORDER BY ParcelID
 )
 Select *
 FROM RowNuMCTE
@@ -163,16 +163,11 @@ WHERE row_num > 1
 
 
 
-
-
---Delete Unused Columns
+--Deleting Unused Columns
 
 SELECT *
 FROM PortfolioProject.dbo.NashvilleHousing
 
 ALTER TABLE PortfolioProject.dbo.NashvilleHousing
-DROP COLUMN OwnerAddress, TaxDistrict, PropertyAddress
+DROP COLUMN OwnerAddress, TaxDistrict, PropertyAddress, SaleDate
 
-
-ALTER TABLE PortfolioProject.dbo.NashvilleHousing
-DROP COLUMN SaleDate
